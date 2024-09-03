@@ -10,6 +10,7 @@ import React, {useState} from 'react';
 import Colors from '../themes/Colors';
 import CustomInput from '../components/CustomInput';
 import TodoItem from '../components/TodoItem';
+import CustomButton from '../components/CustomButton';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -25,13 +26,31 @@ const TaskListScreen = () => {
     {
       userId: 2,
       id: 2,
-      title: 'Title2 and Title2',
+      title: 'Title and Title2',
       status: 'done',
     },
     {
       userId: 3,
       id: 3,
-      title: 'Title3 and Title3',
+      title: 'Title and Title3',
+      status: 'open',
+    },
+    {
+      userId: 4,
+      id: 4,
+      title: 'Title and Title4',
+      status: 'closed',
+    },
+    {
+      userId: 5,
+      id: 5,
+      title: 'Title5 and Title5',
+      status: 'done',
+    },
+    {
+      userId: 6,
+      id: 6,
+      title: 'Title and Title6',
       status: 'open',
     },
   ]);
@@ -49,6 +68,10 @@ const TaskListScreen = () => {
           <FlatList
             data={tasks}
             renderItem={({item, index}) => <TodoItem key={index} data={item} />}
+          />
+          <CustomButton
+            title={'Add Task'}
+            style={{marginTop: 24, marginBottom: 8}}
           />
         </SafeAreaView>
       </View>

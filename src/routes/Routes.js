@@ -17,7 +17,7 @@ const Routes = () => {
           backgroundColor: Colors.background.primary,
         },
         headerTintColor: Colors.text,
-        headerBackTitle: false,
+        headerBackTitleVisible: false,
       }}>
       <Stack.Screen name={ScreenNames.addTask} component={AddTaskScreen} />
       <Stack.Screen

@@ -1,18 +1,28 @@
-import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Text,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../themes/Colors';
 
-const CustomInput = ({value, onChangeText, placeholder}) => {
+const CustomInput = ({value, onChangeText, onPress, placeholder}) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.inputContainer}>
         <Ionicons name="search-outline" size={28} color={Colors.primary} />
-        <TextInput
-          value={value}
-          style={styles.input}
-          onChangeText={e => onChangeText(e)}
-          placeholder={placeholder}
-        />
+        {!onPress ? (
+          <TextInput
+            value={value}
+            style={styles.input}
+            onChangeText={e => onChangeText(e)}
+            placeholder={placeholder}
+          />
+        ) : (
+          <Text>{value}</Text>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -34,7 +44,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   input: {
-    flex: 1,
     fontSize: 18,
   },
 });

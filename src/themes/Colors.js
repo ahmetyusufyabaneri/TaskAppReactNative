@@ -2,13 +2,16 @@ export default {
   primary: '#7D48FA',
   secondary: '#E2D8F4',
   black: '#000',
-  white: '#fff',
+  white: '#FFF',
   text: {
     primary: '#434D65',
-    secondary: '#c1c1cb',
+    secondary: '#C1C1CB',
   },
   background: {
     primary: '#EEECF2',
     secondary: '#F5F5F5',
+    green: '#B4E380',
+    orange: '#FFB200',
   },
+  red: '#FF4C4C',
 };
