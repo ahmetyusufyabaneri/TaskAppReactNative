@@ -1,11 +1,12 @@
 import LottieView from 'lottie-react-native';
-import {StyleSheet, Text, View} from 'react-native';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import CustomInput from '../components/CustomInput';
 import Colors from '../themes/Colors';
 import CustomButton from '../components/CustomButton';
 import {useState} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Status from '../constants/Status';
 
 const AddTaskScreen = () => {
   const [taskTitle, setTaskTitle] = useState('');
@@ -14,10 +15,7 @@ const AddTaskScreen = () => {
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'},
-  ]);
+  const [items, setItems] = useState(Status);
 
   const showDatePicker = () => {
     setIsDatePickerVisible(true);
@@ -45,7 +43,7 @@ const AddTaskScreen = () => {
         </View>
         <View>
           <Text style={styles.label}>Task Name</Text>
-          <CustomInput value={taskTitle} />
+          <CustomInput value={taskTitle} onChangeText={e => setTaskTitle(e)} />
         </View>
         <View style={styles.timeInputs}>
           <View style={styles.timeInputContainer}>
@@ -57,26 +55,25 @@ const AddTaskScreen = () => {
             <CustomInput onPress={() => showDatePicker()} />
           </View>
         </View>
-        <View>
+        <View style={styles.dropdownContainer}>
           <Text style={styles.label}>Status</Text>
+          <DropDownPicker
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            style={{borderWidth: 0}}
+          />
         </View>
       </View>
-      <CustomButton title={'Create Task'} />
-
+      <CustomButton title="Create Task" />
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
-      />
-
-      <DropDownPicker
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={setValue}
-        setItems={setItems}
       />
     </View>
   );
@@ -86,9 +83,10 @@ export default AddTaskScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.94,
     backgroundColor: Colors.background.primary,
     paddingHorizontal: 16,
+    justifyContent: 'space-between',
   },
   inlineContainer: {
     width: '100%',
@@ -106,5 +104,8 @@ const styles = StyleSheet.create({
   },
   timeInputContainer: {
     width: '45%',
+  },
+  dropdownContainer: {
+    gap: 12,
   },
 });

@@ -10,14 +10,17 @@ import Colors from '../themes/Colors';
 
 const CustomInput = ({value, onChangeText, onPress, placeholder}) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPress}
+      disabled={onPress ? false : true}>
       <View style={styles.inputContainer}>
         <Ionicons name="search-outline" size={28} color={Colors.primary} />
         {!onPress ? (
           <TextInput
             value={value}
             style={styles.input}
-            onChangeText={e => onChangeText(e)}
+            onChangeText={onChangeText}
             placeholder={placeholder}
           />
         ) : (
