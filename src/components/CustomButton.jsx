@@ -1,14 +1,9 @@
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Colors from '../themes/Colors';
-import {useNavigation} from '@react-navigation/native';
-import ScreenNames from '../constants/ScreenNames';
 
-const CustomButton = ({title, style}) => {
-  const navigation = useNavigation();
+const CustomButton = ({title, onPress, style}) => {
   return (
-    <TouchableOpacity
-      onPress={() => navigation.navigate(ScreenNames.addTask)}
-      style={[styles.button, style]}>
+    <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
       <Text style={styles.buttonTitle}>{title}</Text>
     </TouchableOpacity>
   );

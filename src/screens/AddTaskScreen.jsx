@@ -1,33 +1,101 @@
 import LottieView from 'lottie-react-native';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import CustomInput from '../components/CustomInput';
 import Colors from '../themes/Colors';
 import CustomButton from '../components/CustomButton';
-import {useState} from 'react';
+import {useLayoutEffect, useState} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Status from '../constants/Status';
+import uuid from 'react-native-uuid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import ScreenNames from '../constants/ScreenNames';
+import {Toast} from 'toastify-react-native';
 
 const AddTaskScreen = () => {
-  const [taskTitle, setTaskTitle] = useState('');
+  const navigation = useNavigation();
+  const route = useRoute();
 
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  const {data} = route.params || {};
+
+  const [taskTitle, setTaskTitle] = useState(data?.title || '');
+  const [startDate, setStartDate] = useState(data?.startDate || '');
+  const [endDate, setEndDate] = useState(data?.endDate || '');
+
+  const [isStartDatePickerVisible, setIsStartDatePickerVisible] =
+    useState(false);
+
+  const [isEndDatePickerVisible, setIsEndDatePickerVisible] = useState(false);
 
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState(data?.status || null);
   const [items, setItems] = useState(Status);
 
-  const showDatePicker = () => {
-    setIsDatePickerVisible(true);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: data ? 'Update Task' : 'Add Task',
+    });
+  }, [navigation, data]);
+
+  const showStartDatePicker = () => {
+    setIsStartDatePickerVisible(true);
   };
 
-  const hideDatePicker = () => {
-    setIsDatePickerVisible(false);
+  const showEndDatePicker = () => {
+    setIsEndDatePickerVisible(true);
   };
 
-  const handleConfirm = date => {
-    console.warn('A date has been picked', date);
-    hideDatePicker();
+  const hideStartDatePicker = () => {
+    setIsStartDatePickerVisible(false);
+  };
+
+  const hideEndDatePicker = () => {
+    setIsEndDatePickerVisible(false);
+  };
+
+  const handleConfirmStartDate = date => {
+    setStartDate(date.toString());
+    hideStartDatePicker();
+  };
+
+  const handleConfirmEndDate = date => {
+    setEndDate(date.toString());
+    hideEndDatePicker();
+  };
+
+  const handleAddTask = async () => {
+    if (!taskTitle || !startDate || !endDate || !value) {
+      Toast.error('Please fill in all fields!');
+      return;
+    }
+
+    const newTask = {
+      id: data?.id || uuid.v4(),
+      title: taskTitle,
+      startDate,
+      endDate,
+      status: value,
+    };
+
+    try {
+      const existingTasks = await AsyncStorage.getItem('tasks');
+      let tasks = existingTasks ? JSON.parse(existingTasks) : [];
+
+      if (data) {
+        tasks = tasks.map(task => (task.id == data.id ? newTask : task));
+        Toast.info('Task updated!');
+      } else {
+        tasks.push(newTask);
+        Toast.success('Task created!');
+      }
+
+      await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
+
+      navigation.navigate(ScreenNames.taskList);
+    } catch (error) {
+      console.log(error, 'An error occurred');
+    }
   };
 
   return (
@@ -48,11 +116,21 @@ const AddTaskScreen = () => {
         <View style={styles.timeInputs}>
           <View style={styles.timeInputContainer}>
             <Text style={styles.label}>Start Time</Text>
-            <CustomInput onPress={() => showDatePicker()} />
+            <CustomInput
+              onPress={() => showStartDatePicker()}
+              onChangeText={e => setStartDate(e)}
+              value={startDate}
+              isDate
+            />
           </View>
           <View style={styles.timeInputContainer}>
             <Text style={styles.label}>End Time</Text>
-            <CustomInput onPress={() => showDatePicker()} />
+            <CustomInput
+              onPress={() => showEndDatePicker()}
+              onChangeText={e => setEndDate(e)}
+              value={endDate}
+              isDate
+            />
           </View>
         </View>
         <View style={styles.dropdownContainer}>
@@ -68,12 +146,22 @@ const AddTaskScreen = () => {
           />
         </View>
       </View>
-      <CustomButton title="Create Task" />
+      <CustomButton
+        onPress={handleAddTask}
+        title={data ? 'Update Task' : 'Create Task'}
+      />
+
       <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
+        onConfirm={handleConfirmStartDate}
+        isVisible={isStartDatePickerVisible}
+        mode="datetime"
+        onCancel={hideStartDatePicker}
+      />
+      <DateTimePickerModal
+        onConfirm={handleConfirmEndDate}
+        isVisible={isEndDatePickerVisible}
+        mode="datetime"
+        onCancel={hideEndDatePicker}
       />
     </View>
   );

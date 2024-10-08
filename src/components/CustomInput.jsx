@@ -7,8 +7,16 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../themes/Colors';
+import {formatDate} from '../utils/formatDate';
 
-const CustomInput = ({value, onChangeText, onPress, placeholder}) => {
+const CustomInput = ({
+  value,
+  onChangeText,
+  onPress,
+  placeholder,
+  isDate,
+  ...rest
+}) => {
   return (
     <TouchableOpacity
       style={styles.container}
@@ -22,9 +30,12 @@ const CustomInput = ({value, onChangeText, onPress, placeholder}) => {
             style={styles.input}
             onChangeText={onChangeText}
             placeholder={placeholder}
+            {...rest}
           />
         ) : (
-          <Text>{value}</Text>
+          <Text style={styles.date}>
+            {value && formatDate(value?.toString())}
+          </Text>
         )}
       </View>
     </TouchableOpacity>
@@ -48,5 +59,9 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 18,
+  },
+  date: {
+    fontSize: 12,
+    fontWeight: '600',
   },
 });

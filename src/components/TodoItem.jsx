@@ -1,9 +1,14 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Colors from '../themes/Colors';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
+import {formatDate} from '../utils/formatDate';
+import StatusButton from './StatusButton';
+import {useNavigation} from '@react-navigation/native';
+import ScreenNames from '../constants/ScreenNames';
 
-const TodoItem = ({data}) => {
+const TodoItem = ({data, onDelete}) => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <View style={styles.itemHeader}>
@@ -12,7 +17,7 @@ const TodoItem = ({data}) => {
             styles.title,
             data.status === 'closed' && {textDecorationLine: 'line-through'},
           ]}>
-          {data.title}
+          {data?.title}
         </Text>
         <View
           style={[
@@ -24,23 +29,21 @@ const TodoItem = ({data}) => {
                   : Colors.background.orange,
             },
           ]}>
-          <Text style={styles.statusText}>{data.status}</Text>
+          <Text style={styles.statusText}>{data?.status}</Text>
         </View>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity>
-            <MaterialCommunityIcons
-              name="pencil"
-              size={34}
-              color={Colors.black}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <MaterialCommunityIcons
-              name="trash-can"
-              size={34}
-              color={Colors.red}
-            />
-          </TouchableOpacity>
+          <StatusButton
+            name="pencil"
+            size={30}
+            color={Colors.black}
+            onPress={() => navigation.navigate(ScreenNames.addTask, {data})}
+          />
+          <StatusButton
+            name="trash-can"
+            size={30}
+            color={Colors.red}
+            onPress={() => onDelete()}
+          />
         </View>
       </View>
       <View style={styles.itemFooter}>
@@ -48,14 +51,14 @@ const TodoItem = ({data}) => {
           <Text style={styles.dateTitle}>Start Date</Text>
           <View style={styles.dateContainer}>
             <Octicons name="clock" size={16} color={Colors.primary} />
-            <Text style={styles.date}>10.06.2024 - 13:40</Text>
+            <Text style={styles.date}>{formatDate(data.startDate)}</Text>
           </View>
         </View>
         <View>
           <Text style={styles.dateTitle}>End Date</Text>
           <View style={styles.dateContainer}>
             <Octicons name="clock" size={16} color={Colors.primary} />
-            <Text style={styles.date}>20.07.2024 - 05:40</Text>
+            <Text style={styles.date}>{formatDate(data.endDate)}</Text>
           </View>
         </View>
       </View>
