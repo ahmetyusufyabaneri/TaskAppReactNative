@@ -4,6 +4,8 @@
 
 <ul>
 
+<h2>Used Technologies</h2>
+
 <li>@react-native-async-storage/async-storage</li>
 <li>@react-native-community/datetimepicker</li>
 <li>@react-navigation/native</li>
