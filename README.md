@@ -2,9 +2,9 @@
 
 <p>This project is a task app developed with React Native. Application consist of a splash screen, onboarding screen, add task page and task list page. Users can create, update and delete tasks. They can view created tasks.</p>
 
-<ul>
-
 <h2>Used Technologies</h2>
+
+<ul>
 
 <li>@react-native-async-storage/async-storage</li>
 <li>@react-native-community/datetimepicker</li>
